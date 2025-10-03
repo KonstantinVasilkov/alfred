@@ -13,11 +13,55 @@ Project settings are managed using Pydantic Settings (`alfred/config.py`) and lo
 - All settings are defined in the `Settings` class
 - Use `get_settings()` to access configuration throughout the application
 
+## Development Workflow
+
+This project follows **Trunk-Based Development** (see trunkbaseddevelopment.com):
+- Work on short-lived feature branches (max 1-2 days)
+- Merge frequently to `main` branch
+- Keep `main` always releasable
+- Use feature flags for incomplete features if needed
+
+### Git Workflow
+1. Create a feature branch: `git checkout -b feature/your-feature-name`
+2. Make changes and commit frequently
+3. Run pre-commit hooks before pushing: `make pre-commit`
+4. Push and create a pull request to `main`
+5. After merge, delete the feature branch
+
+### Pre-commit Hooks
+Pre-commit hooks run automatically before each commit:
+- **ruff**: Linting and formatting
+- **mypy**: Type checking
+
+Install hooks: `make pre-commit-install`
+Run manually: `make pre-commit`
+
 ## Development Commands
 
+### Makefile shortcuts
+```bash
+make install          # Install dependencies
+make test             # Run tests
+make lint             # Run ruff linting
+make format           # Format code with ruff
+make typecheck        # Run mypy type checking
+make pre-commit       # Run all pre-commit hooks
+make docker-build     # Build Docker image
+make docker-up        # Start services with docker-compose
+make docker-down      # Stop docker-compose services
+make clean            # Clean cache files
+```
+
 ### Running the application
+
+**Local:**
 ```bash
 python main.py
+```
+
+**Docker:**
+```bash
+make docker-up
 ```
 
 ### Dependency management
@@ -25,6 +69,7 @@ This project uses `uv` for dependency management:
 ```bash
 uv add <package>        # Add production dependency
 uv add --dev <package>  # Add development dependency
+uv sync                 # Install all dependencies
 ```
 
 ## Code Style

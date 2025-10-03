@@ -5,11 +5,15 @@ from aiogram.types import Message
 
 async def start_handler(message: Message) -> None:
     """Handle /start command."""
+    if message.from_user is None:
+        return
     await message.answer(text=f"Hello, {message.from_user.full_name}!")
 
 
 async def echo_handler(message: Message) -> None:
     """Echo any message back to the user."""
+    if message.text is None:
+        return
     await message.answer(text=message.text)
 
 
