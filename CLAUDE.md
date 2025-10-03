@@ -28,6 +28,33 @@ This project follows **Trunk-Based Development** (see trunkbaseddevelopment.com)
 4. Push and create a pull request to `main`
 5. After merge, delete the feature branch
 
+### Commit Message Convention
+Follow the Conventional Commits specification:
+
+**Format:**
+```
+type: imperative summary (<50 chars)
+
+Optional body providing context in 1-2 sentences.
+```
+
+**Types:**
+- `feat`: New feature
+- `fix`: Bug fix
+- `docs`: Documentation changes
+- `style`: Code style changes (formatting, etc.)
+- `refactor`: Code refactoring
+- `perf`: Performance improvements
+- `test`: Adding or updating tests
+- `chore`: Maintenance tasks
+
+**Rules:**
+- Start with imperative verb (e.g., "add", "fix", "update")
+- Keep summary under 50 characters
+- Leave empty line before body
+- No special symbols before or after commit text
+- Body should explain motivation and impact (1-2 sentences)
+
 ### Pre-commit Hooks
 Pre-commit hooks run automatically before each commit:
 - **ruff**: Linting and formatting
