@@ -25,10 +25,10 @@ docker-build:
 	docker build -t alfred:latest .
 
 docker-up:
-	docker-compose up -d
+	docker compose up -d
 
 docker-down:
-	docker-compose down
+	docker compose down
 
 clean:
 	find . -type d -name "__pycache__" -exec rm -rf {} +
