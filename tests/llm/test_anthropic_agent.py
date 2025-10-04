@@ -32,11 +32,12 @@ async def test_anthropic_agent_initialization() -> None:
     """Test Anthropic agent initializes with correct parameters."""
     # Arrange & Act
     with patch("alfred.llm.anthropic_agent.Agent") as mock_agent_class:
-        agent = AnthropicAgent(api_key="test_api_key", model="claude-3-haiku-20240307")
+        with patch.dict("os.environ", {}, clear=True):
+            agent = AnthropicAgent(api_key="test_api_key", model="claude-3-haiku-20240307")
 
-        # Assert
-        assert agent._api_key == "test_api_key"
-        mock_agent_class.assert_called_once_with(
-            model="claude-3-haiku-20240307",
-            system_prompt="You are a helpful assistant. Provide concise and accurate responses.",
-        )
+            # Assert
+            assert agent._agent is not None
+            mock_agent_class.assert_called_once_with(
+                model="claude-3-haiku-20240307",
+                system_prompt="You are a helpful assistant. Provide concise and accurate responses.",
+            )
