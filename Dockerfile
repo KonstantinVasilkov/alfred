@@ -1,19 +1,30 @@
-FROM python:3.13-slim
+# Use Python image with uv pre-installed
+FROM ghcr.io/astral-sh/uv:python3.13-bookworm-slim
 
-# Install uv
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
+# Setup non-root user
+RUN groupadd --system --gid 999 alfred \
+ && useradd --system --gid 999 --uid 999 --create-home alfred
 
 WORKDIR /app
 
-# Copy dependency files
-COPY pyproject.toml uv.lock ./
+# Configure uv environment
+ENV UV_COMPILE_BYTECODE=1
+ENV UV_LINK_MODE=copy
 
-# Install dependencies
-RUN uv sync --frozen --no-dev
+# Install dependencies using uv with cache mount
+RUN --mount=type=cache,target=/root/.cache/uv \
+ --mount=type=bind,source=uv.lock,target=uv.lock \
+ --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
+ uv sync --frozen --no-install-project --no-dev
 
-# Copy application code
-COPY alfred/ ./alfred/
-COPY main.py ./
+# Copy project and install
+COPY . /app
+RUN --mount=type=cache,target=/root/.cache/uv \
+ uv sync --frozen --no-dev
+
+# Configure path and switch to non-root user
+ENV PATH="/app/.venv/bin:$PATH"
+USER alfred
 
 # Run the application
-CMD ["uv", "run", "python", "main.py"]
+CMD ["python", "main.py"]
