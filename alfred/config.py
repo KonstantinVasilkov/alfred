@@ -13,6 +13,10 @@ class Settings(BaseSettings):
     )
 
     telegram_bot_token: str = Field(description="Telegram bot API token")
+    anthropic_api_key: str = Field(description="Anthropic API key for LLM interactions")
+    llm_model: str = Field(
+        default="claude-3-haiku-20240307", description="LLM model to use for message processing"
+    )
 
 
 def get_settings() -> Settings:
