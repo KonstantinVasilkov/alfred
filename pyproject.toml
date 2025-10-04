@@ -6,7 +6,8 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "aiogram>=3.22.0",
-    "pydantic-ai[anthropic]>=1.0.15",
+    "anthropic>=0.69.0",
+    "pydantic-ai>=1.0.15",
     "pydantic-settings>=2.11.0",
     "python-dotenv>=1.1.1",
 ]
