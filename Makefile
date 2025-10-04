@@ -22,7 +22,7 @@ pre-commit-install:
 	uv run pre-commit install
 
 docker-build:
-	docker build -t alfred:latest .
+	docker build --no-cache -t alfred:latest .
 
 docker-up:
 	docker compose up -d

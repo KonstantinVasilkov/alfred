@@ -15,7 +15,7 @@ def main() -> None:
     message_service = MessageService(llm_agent=llm_agent)
 
     # Run the bot
-    asyncio.run(run_bot(token=settings.telegram_bot_token, message_service=message_service))
+    asyncio.run(run_bot(token=settings.TELEGRAM_BOT_TOKEN, message_service=message_service))
 
 
 if __name__ == "__main__":

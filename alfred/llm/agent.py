@@ -30,4 +30,4 @@ def create_agent(settings: Settings) -> LLMAgent:
     """
     from alfred.llm.anthropic_agent import AnthropicAgent
 
-    return AnthropicAgent(api_key=settings.anthropic_api_key, model=settings.llm_model)
+    return AnthropicAgent(api_key=settings.ANTHROPIC_API_KEY, model=settings.LLM_MODEL)

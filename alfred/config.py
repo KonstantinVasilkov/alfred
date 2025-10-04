@@ -1,6 +1,10 @@
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 class Settings(BaseSettings):
     """Application settings loaded from environment variables."""
@@ -12,9 +16,9 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
-    telegram_bot_token: str = Field(description="Telegram bot API token")
-    anthropic_api_key: str = Field(description="Anthropic API key for LLM interactions")
-    llm_model: str = Field(
+    TELEGRAM_BOT_TOKEN: str = Field(description="Telegram bot API token")
+    ANTHROPIC_API_KEY: str = Field(description="Anthropic API key for LLM interactions")
+    LLM_MODEL: str = Field(
         default="claude-3-haiku-20240307", description="LLM model to use for message processing"
     )
 

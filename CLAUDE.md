@@ -138,3 +138,13 @@ The project is currently in its initial setup phase. As it grows, follow this la
 - **Entrypoints**: Web controllers, CLI commands, etc.
 
 The main entry point is `main.py:main()`.
+
+
+## Context7
+## Use Context7 by Default
+Always use context7 when I need code generation, setup or configuration steps, or library/API documentation. This means you should automatically use the Context7 MCP tools to resolve library id and get library docs without me having to explicitly ask.
+
+
+[[calls]]
+match = "when the user requests code examples, setup or configuration steps, or library/API documentation"
+tool  = "context7"
