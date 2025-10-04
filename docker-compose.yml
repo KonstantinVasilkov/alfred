@@ -5,23 +5,3 @@ services:
     restart: unless-stopped
     env_file:
       - .env
-
-  develop:
-    build: .
-    container_name: alfred-bot-dev
-    env_file:
-      - .env
-    watch:
-      # Sync source code changes
-      - action: sync
-        path: .
-        target: /app
-        ignore:
-          - .venv/
-          - .git/
-          - __pycache__/
-          - "*.pyc"
-
-      # Rebuild if dependencies change
-      - action: rebuild
-        path: ./uv.lock
