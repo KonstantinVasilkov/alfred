@@ -38,6 +38,7 @@ USER alfred
 
 # Add venv to PATH
 ENV PATH="/app/.venv/bin:$PATH"
+ENV VIRTUAL_ENV="/app/.venv"
 
 # Run the application
-CMD ["python", "main.py"]
+CMD ["/app/.venv/bin/python", "main.py"]
