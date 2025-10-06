@@ -2,7 +2,6 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 from aiogram.types import Message, User
-
 from telegram_bot.bot import create_dispatcher, message_handler, start_handler
 
 
