@@ -1,6 +1,6 @@
 import asyncio
 
-from llm.agent import create_agent
+from llm.factory import create_agent
 from telegram_bot.bot import run_bot
 from telegram_bot.config import get_settings
 from telegram_bot.message_service import MessageService
