@@ -1,0 +1,8 @@
+[project]
+name = "shared-domain"
+version = "0.1.0"
+description = "Shared domain models and business logic"
+requires-python = ">=3.13"
+dependencies = [
+    "pydantic>=2.10.0",
+]

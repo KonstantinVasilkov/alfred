@@ -54,6 +54,8 @@ Optional body providing context in 1-2 sentences.
 - Leave empty line before body
 - No special symbols before or after commit text
 - Body should explain motivation and impact (1-2 sentences)
+- Never mention Anthropic or Claude in commit messages
+- Never use emojis in commit messages
 
 ### Pre-commit Hooks
 Pre-commit hooks run automatically before each commit:

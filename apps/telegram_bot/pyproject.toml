@@ -1,0 +1,22 @@
+[project]
+name = "telegram-bot"
+version = "0.1.0"
+description = "Telegram bot application for Alfred"
+requires-python = ">=3.13"
+dependencies = [
+    "aiogram>=3.22.0",
+    "shared-infra",
+    "llm",
+]
+
+[dependency-groups]
+dev = [
+    "mypy>=1.18.2",
+    "pytest>=8.4.2",
+    "pytest-asyncio>=1.2.0",
+    "ruff>=0.13.3",
+]
+
+[tool.uv.sources]
+shared-infra = { workspace = true }
+llm = { workspace = true }
