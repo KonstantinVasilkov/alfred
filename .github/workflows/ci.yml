@@ -49,14 +49,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
-        with:
-          enable-cache: true
-      - name: Set up Python
-        run: uv python install 3.13
-      - name: Install dependencies
-        run: uv sync
+      - uses: ./.github/actions/setup-python-uv
       - name: Run ruff lint
         run: uv run ruff check apps/telegram_bot
       - name: Run ruff format check
@@ -70,14 +63,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
-        with:
-          enable-cache: true
-      - name: Set up Python
-        run: uv python install 3.13
-      - name: Install dependencies
-        run: uv sync
+      - uses: ./.github/actions/setup-python-uv
       - name: Run tests
         run: uv run pytest apps/telegram_bot/tests -v
 
@@ -87,14 +73,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
-        with:
-          enable-cache: true
-      - name: Set up Python
-        run: uv python install 3.13
-      - name: Install dependencies
-        run: uv sync
+      - uses: ./.github/actions/setup-python-uv
       - name: Run ruff lint
         run: uv run ruff check apps/finances_api
       - name: Run ruff format check
@@ -108,14 +87,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
-        with:
-          enable-cache: true
-      - name: Set up Python
-        run: uv python install 3.13
-      - name: Install dependencies
-        run: uv sync
+      - uses: ./.github/actions/setup-python-uv
       - name: Run tests
         run: |
           if [ -d "apps/finances_api/tests" ] && [ -n "$(find apps/finances_api/tests -name 'test_*.py' -type f)" ]; then
@@ -130,14 +102,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
-        with:
-          enable-cache: true
-      - name: Set up Python
-        run: uv python install 3.13
-      - name: Install dependencies
-        run: uv sync
+      - uses: ./.github/actions/setup-python-uv
       - name: Run ruff lint
         run: uv run ruff check apps/llm_connectors
       - name: Run ruff format check
@@ -151,14 +116,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
-        with:
-          enable-cache: true
-      - name: Set up Python
-        run: uv python install 3.13
-      - name: Install dependencies
-        run: uv sync
+      - uses: ./.github/actions/setup-python-uv
       - name: Run tests
         run: uv run pytest apps/llm_connectors/tests -v
 
@@ -168,14 +126,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
-        with:
-          enable-cache: true
-      - name: Set up Python
-        run: uv python install 3.13
-      - name: Install dependencies
-        run: uv sync
+      - uses: ./.github/actions/setup-python-uv
       - name: Run ruff lint
         run: uv run ruff check libs/shared_domain
       - name: Run ruff format check
@@ -189,14 +140,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
-        with:
-          enable-cache: true
-      - name: Set up Python
-        run: uv python install 3.13
-      - name: Install dependencies
-        run: uv sync
+      - uses: ./.github/actions/setup-python-uv
       - name: Run tests
         run: uv run pytest libs/shared_domain/tests -v
 
@@ -206,14 +150,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
-        with:
-          enable-cache: true
-      - name: Set up Python
-        run: uv python install 3.13
-      - name: Install dependencies
-        run: uv sync
+      - uses: ./.github/actions/setup-python-uv
       - name: Run ruff lint
         run: uv run ruff check libs/shared_infra
       - name: Run ruff format check
@@ -227,14 +164,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
-        with:
-          enable-cache: true
-      - name: Set up Python
-        run: uv python install 3.13
-      - name: Install dependencies
-        run: uv sync
+      - uses: ./.github/actions/setup-python-uv
       - name: Run tests
         run: uv run pytest libs/shared_infra/tests -v
 
@@ -244,14 +174,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
-        with:
-          enable-cache: true
-      - name: Set up Python
-        run: uv python install 3.13
-      - name: Install dependencies
-        run: uv sync
+      - uses: ./.github/actions/setup-python-uv
       - name: Run ruff lint
         run: uv run ruff check libs/llm
       - name: Run ruff format check
@@ -265,13 +188,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
-        with:
-          enable-cache: true
-      - name: Set up Python
-        run: uv python install 3.13
-      - name: Install dependencies
-        run: uv sync
+      - uses: ./.github/actions/setup-python-uv
       - name: Run tests
         run: uv run pytest libs/llm/tests -v
