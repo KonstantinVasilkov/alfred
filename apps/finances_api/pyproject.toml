@@ -1,0 +1,23 @@
+[project]
+name = "finances-api"
+version = "0.1.0"
+description = "Personal finances API application"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi>=0.115.0",
+    "uvicorn>=0.32.0",
+    "shared-domain",
+    "shared-infra",
+]
+
+[dependency-groups]
+dev = [
+    "mypy>=1.18.2",
+    "pytest>=8.4.2",
+    "pytest-asyncio>=1.2.0",
+    "ruff>=0.13.3",
+]
+
+[tool.uv.sources]
+shared-domain = { workspace = true }
+shared-infra = { workspace = true }
