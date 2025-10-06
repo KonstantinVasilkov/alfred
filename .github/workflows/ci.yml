@@ -1,0 +1,268 @@
+name: CI
+
+on:
+  push:
+    branches: [main, feature/**]
+  pull_request:
+    branches: [main]
+
+jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      telegram_bot: ${{ steps.changes.outputs.telegram_bot }}
+      finances_api: ${{ steps.changes.outputs.finances_api }}
+      llm_connectors: ${{ steps.changes.outputs.llm_connectors }}
+      shared_domain: ${{ steps.changes.outputs.shared_domain }}
+      shared_infra: ${{ steps.changes.outputs.shared_infra }}
+      llm: ${{ steps.changes.outputs.llm }}
+      root: ${{ steps.changes.outputs.root }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          filters: |
+            telegram_bot:
+              - 'apps/telegram_bot/**'
+            finances_api:
+              - 'apps/finances_api/**'
+            llm_connectors:
+              - 'apps/llm_connectors/**'
+            shared_domain:
+              - 'libs/shared_domain/**'
+            shared_infra:
+              - 'libs/shared_infra/**'
+            llm:
+              - 'libs/llm/**'
+            root:
+              - 'pyproject.toml'
+              - '.github/workflows/**'
+
+  lint-telegram-bot:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.telegram_bot == 'true' || needs.detect-changes.outputs.root == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - name: Set up Python
+        run: uv python install 3.13
+      - name: Install dependencies
+        run: uv sync
+      - name: Run ruff lint
+        run: uv run ruff check apps/telegram_bot
+      - name: Run ruff format check
+        run: uv run ruff format --check apps/telegram_bot
+      - name: Run mypy
+        run: uv run mypy apps/telegram_bot
+
+  test-telegram-bot:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.telegram_bot == 'true' || needs.detect-changes.outputs.root == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - name: Set up Python
+        run: uv python install 3.13
+      - name: Install dependencies
+        run: uv sync
+      - name: Run tests
+        run: uv run pytest apps/telegram_bot/tests -v
+
+  lint-finances-api:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.finances_api == 'true' || needs.detect-changes.outputs.root == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - name: Set up Python
+        run: uv python install 3.13
+      - name: Install dependencies
+        run: uv sync
+      - name: Run ruff lint
+        run: uv run ruff check apps/finances_api
+      - name: Run ruff format check
+        run: uv run ruff format --check apps/finances_api
+      - name: Run mypy
+        run: uv run mypy apps/finances_api
+
+  test-finances-api:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.finances_api == 'true' || needs.detect-changes.outputs.root == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - name: Set up Python
+        run: uv python install 3.13
+      - name: Install dependencies
+        run: uv sync
+      - name: Run tests
+        run: uv run pytest apps/finances_api/tests -v
+
+  lint-llm-connectors:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.llm_connectors == 'true' || needs.detect-changes.outputs.root == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - name: Set up Python
+        run: uv python install 3.13
+      - name: Install dependencies
+        run: uv sync
+      - name: Run ruff lint
+        run: uv run ruff check apps/llm_connectors
+      - name: Run ruff format check
+        run: uv run ruff format --check apps/llm_connectors
+      - name: Run mypy
+        run: uv run mypy apps/llm_connectors
+
+  test-llm-connectors:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.llm_connectors == 'true' || needs.detect-changes.outputs.root == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - name: Set up Python
+        run: uv python install 3.13
+      - name: Install dependencies
+        run: uv sync
+      - name: Run tests
+        run: uv run pytest apps/llm_connectors/tests -v
+
+  lint-shared-domain:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.shared_domain == 'true' || needs.detect-changes.outputs.root == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - name: Set up Python
+        run: uv python install 3.13
+      - name: Install dependencies
+        run: uv sync
+      - name: Run ruff lint
+        run: uv run ruff check libs/shared_domain
+      - name: Run ruff format check
+        run: uv run ruff format --check libs/shared_domain
+      - name: Run mypy
+        run: uv run mypy libs/shared_domain
+
+  test-shared-domain:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.shared_domain == 'true' || needs.detect-changes.outputs.root == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - name: Set up Python
+        run: uv python install 3.13
+      - name: Install dependencies
+        run: uv sync
+      - name: Run tests
+        run: uv run pytest libs/shared_domain/tests -v
+
+  lint-shared-infra:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.shared_infra == 'true' || needs.detect-changes.outputs.root == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - name: Set up Python
+        run: uv python install 3.13
+      - name: Install dependencies
+        run: uv sync
+      - name: Run ruff lint
+        run: uv run ruff check libs/shared_infra
+      - name: Run ruff format check
+        run: uv run ruff format --check libs/shared_infra
+      - name: Run mypy
+        run: uv run mypy libs/shared_infra
+
+  test-shared-infra:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.shared_infra == 'true' || needs.detect-changes.outputs.root == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - name: Set up Python
+        run: uv python install 3.13
+      - name: Install dependencies
+        run: uv sync
+      - name: Run tests
+        run: uv run pytest libs/shared_infra/tests -v
+
+  lint-llm:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.llm == 'true' || needs.detect-changes.outputs.root == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - name: Set up Python
+        run: uv python install 3.13
+      - name: Install dependencies
+        run: uv sync
+      - name: Run ruff lint
+        run: uv run ruff check libs/llm
+      - name: Run ruff format check
+        run: uv run ruff format --check libs/llm
+      - name: Run mypy
+        run: uv run mypy libs/llm
+
+  test-llm:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.llm == 'true' || needs.detect-changes.outputs.root == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - name: Set up Python
+        run: uv python install 3.13
+      - name: Install dependencies
+        run: uv sync
+      - name: Run tests
+        run: uv run pytest libs/llm/tests -v
