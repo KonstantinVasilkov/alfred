@@ -189,7 +189,6 @@ check_untyped_defs = true
 strict_equality = true
 namespace_packages = true
 explicit_package_bases = true
-mypy_path = "apps/telegram_bot:apps/finances_api:apps/llm_connectors:libs/llm:libs/shared_domain:libs/shared_infra"
 exclude = ["^.*/tests/.*$"]
 
 [[tool.mypy.overrides]]
