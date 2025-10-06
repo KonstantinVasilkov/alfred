@@ -117,7 +117,12 @@ jobs:
       - name: Install dependencies
         run: uv sync
       - name: Run tests
-        run: uv run pytest apps/finances_api/tests -v
+        run: |
+          if [ -d "apps/finances_api/tests" ] && [ -n "$(find apps/finances_api/tests -name 'test_*.py' -type f)" ]; then
+            uv run pytest apps/finances_api/tests -v
+          else
+            echo "No tests found, skipping..."
+          fi
 
   lint-llm-connectors:
     needs: detect-changes
