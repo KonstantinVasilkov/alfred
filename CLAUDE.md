@@ -114,6 +114,13 @@ uv sync                 # Install all dependencies
 - Prefer modern Python union syntax: `dict[str, Any] | None` over `Optional[dict[str, Any]]`
 - Use Pydantic models over raw dictionaries for input validation
 
+### Import Organization
+- **All imports must be at the top of the file** - no exceptions
+- Never use inline imports or lazy imports as workarounds
+- Circular imports indicate architectural problems - fix the architecture, not the imports
+- Only use inline imports as an absolute last resort when no other solution exists
+- If circular imports occur, refactor to break dependencies (extract interfaces, use dependency inversion, restructure modules)
+
 ## Testing
 
 - Every development stage must end with tests
