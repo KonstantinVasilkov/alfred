@@ -13,6 +13,9 @@ async def test_start_handler() -> None:
     message = MagicMock(spec=Message)
     message.from_user = user
     message.answer = AsyncMock()
+    message.chat = MagicMock()
+    message.chat.id = 456
+    message.message_id = 789
 
     # Act
     await start_handler(message=message)
@@ -25,11 +28,14 @@ async def test_start_handler() -> None:
 async def test_message_handler_with_service() -> None:
     """Test message handler processes message through service."""
     # Arrange
+    user = User(id=123, is_bot=False, first_name="Test", username="testuser")
     message = MagicMock()
     message.text = "Test message"
     message.answer = AsyncMock()
+    message.from_user = user
     message.chat = MagicMock()
-    message.chat.id = 123
+    message.chat.id = 456
+    message.message_id = 789
     message.bot = MagicMock()
     message.bot.send_chat_action = AsyncMock()
 
@@ -41,7 +47,7 @@ async def test_message_handler_with_service() -> None:
         await message_handler(message=message)
 
     # Assert
-    message.bot.send_chat_action.assert_called_once_with(chat_id=123, action="typing")
+    message.bot.send_chat_action.assert_called_once_with(chat_id=456, action="typing")
     mock_service.process_user_message.assert_called_once_with(message_text="Test message")
     message.answer.assert_called_once_with(text="LLM response")
 
