@@ -9,7 +9,7 @@ async def test_anthropic_agent_process_message() -> None:
     """Test Anthropic agent processes message successfully."""
     # Arrange
     mock_result = MagicMock()
-    mock_result.data = "This is a test response"
+    mock_result.output = "This is a test response"
 
     with patch("llm.anthropic_agent.Agent") as mock_agent_class:
         mock_agent_instance = MagicMock()

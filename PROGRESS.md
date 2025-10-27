@@ -10,6 +10,8 @@
 - Fixed Dockerfile for telegram_bot to work with UV workspace
 - Successfully deployed telegram_bot in Docker container
 - Updated all documentation (README.md, CLAUDE.md)
+- Fixed CI workflows to use pyright commands (replaced all mypy references)
+- Fixed pydantic-ai API usage (result.data → result.output) and verified bot operational
 
 ## 2025-10-03
 - Initial project setup with Python 3.13
