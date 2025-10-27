@@ -1,5 +1,4 @@
 import asyncio
-from pathlib import Path
 
 from llm.factory import create_agent
 from shared_infra import get_logger, setup_observability
@@ -18,9 +17,6 @@ def main() -> None:
     logger = get_logger(__name__)
 
     try:
-        # Ensure logs directory exists
-        Path(settings.LOG_FILE_PATH).mkdir(parents=True, exist_ok=True)
-
         logger.info(
             "telegram_bot_starting",
             environment=settings.ENVIRONMENT,

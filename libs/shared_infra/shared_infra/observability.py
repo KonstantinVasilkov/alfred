@@ -26,10 +26,6 @@ def setup_logging(settings: BaseAppSettings) -> None:
         settings: Application settings with logging configuration
 
     """
-    # Create logs directory if it doesn't exist
-    log_dir = Path(settings.LOG_FILE_PATH)
-    log_dir.mkdir(parents=True, exist_ok=True)
-
     # Configure stdlib logging
     log_level = getattr(logging, settings.LOG_LEVEL.upper())
     logging.root.setLevel(log_level)
@@ -42,17 +38,22 @@ def setup_logging(settings: BaseAppSettings) -> None:
     stdout_handler.setLevel(log_level)
     logging.root.addHandler(stdout_handler)
 
-    # Add file handler with rotation
-    log_file = log_dir / f"{settings.OTEL_SERVICE_NAME}.log"
-    file_handler = TimedRotatingFileHandler(
-        filename=str(log_file),
-        when="D",  # Daily rotation
-        interval=1,
-        backupCount=settings.LOG_FILE_RETENTION_DAYS,
-        encoding="utf-8",
-    )
-    file_handler.setLevel(log_level)
-    logging.root.addHandler(file_handler)
+    # Add file handler with rotation (if enabled)
+    if settings.LOG_FILE_ENABLED:
+        # Create logs directory if it doesn't exist
+        log_dir = Path(settings.LOG_FILE_PATH)
+        log_dir.mkdir(parents=True, exist_ok=True)
+
+        log_file = log_dir / f"{settings.OTEL_SERVICE_NAME}.log"
+        file_handler = TimedRotatingFileHandler(
+            filename=str(log_file),
+            when="D",  # Daily rotation
+            interval=1,
+            backupCount=settings.LOG_FILE_RETENTION_DAYS,
+            encoding="utf-8",
+        )
+        file_handler.setLevel(log_level)
+        logging.root.addHandler(file_handler)
 
     # Configure structlog processors based on environment
     processors: list[Any] = [

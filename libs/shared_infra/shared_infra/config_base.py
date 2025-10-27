@@ -12,6 +12,7 @@ class BaseAppSettings(BaseSettings):
 
     # Logging Configuration
     LOG_LEVEL: str = Field(default="INFO", description="Logging level")
+    LOG_FILE_ENABLED: bool = Field(default=True, description="Enable file logging")
     LOG_FILE_PATH: str = Field(default="./logs", description="Directory path for log files")
     LOG_FILE_RETENTION_DAYS: int = Field(default=7, description="Number of days to retain log files")
     LOG_FILE_ROTATION: str = Field(default="1 day", description="Log file rotation interval")
