@@ -205,3 +205,9 @@ testpaths = ["apps/*/tests", "libs/*/tests"]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
+
+[dependency-groups]
+dev = [
+    "pre-commit>=4.3.0",
+    "pyright>=1.1.407",
+]

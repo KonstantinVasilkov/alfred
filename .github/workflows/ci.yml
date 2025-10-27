@@ -54,8 +54,8 @@ jobs:
         run: uv run ruff check apps/telegram_bot
       - name: Run ruff format check
         run: uv run ruff format --check apps/telegram_bot
-      - name: Run mypy
-        run: uv run mypy apps/telegram_bot
+      - name: Run pyright
+        run: uv run pyright apps/telegram_bot
 
   test-telegram-bot:
     needs: detect-changes
@@ -78,8 +78,8 @@ jobs:
         run: uv run ruff check apps/finances_api
       - name: Run ruff format check
         run: uv run ruff format --check apps/finances_api
-      - name: Run mypy
-        run: uv run mypy apps/finances_api
+      - name: Run pyright
+        run: uv run pyright apps/finances_api
 
   test-finances-api:
     needs: detect-changes
@@ -107,8 +107,8 @@ jobs:
         run: uv run ruff check apps/llm_connectors
       - name: Run ruff format check
         run: uv run ruff format --check apps/llm_connectors
-      - name: Run mypy
-        run: uv run mypy apps/llm_connectors
+      - name: Run pyright
+        run: uv run pyright apps/llm_connectors
 
   test-llm-connectors:
     needs: detect-changes
@@ -131,8 +131,8 @@ jobs:
         run: uv run ruff check libs/shared_domain
       - name: Run ruff format check
         run: uv run ruff format --check libs/shared_domain
-      - name: Run mypy
-        run: uv run mypy libs/shared_domain
+      - name: Run pyright
+        run: uv run pyright libs/shared_domain
 
   test-shared-domain:
     needs: detect-changes
@@ -155,8 +155,8 @@ jobs:
         run: uv run ruff check libs/shared_infra
       - name: Run ruff format check
         run: uv run ruff format --check libs/shared_infra
-      - name: Run mypy
-        run: uv run mypy libs/shared_infra
+      - name: Run pyright
+        run: uv run pyright libs/shared_infra
 
   test-shared-infra:
     needs: detect-changes
@@ -179,8 +179,8 @@ jobs:
         run: uv run ruff check libs/llm
       - name: Run ruff format check
         run: uv run ruff format --check libs/llm
-      - name: Run mypy
-        run: uv run mypy libs/llm
+      - name: Run pyright
+        run: uv run pyright libs/llm
 
   test-llm:
     needs: detect-changes

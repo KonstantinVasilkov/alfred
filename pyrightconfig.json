@@ -1,0 +1,63 @@
+{
+  "include": ["apps", "libs"],
+  "exclude": [
+    "**/__pycache__",
+    "**/.venv",
+    "**/.pytest_cache",
+    "**/.mypy_cache",
+    "**/.ruff_cache",
+    "**/node_modules"
+  ],
+  "executionEnvironments": [
+    {
+      "root": "apps/telegram_bot",
+      "pythonVersion": "3.13",
+      "extraPaths": [
+        "libs/llm",
+        "libs/shared_infra",
+        "libs/shared_domain"
+      ]
+    },
+    {
+      "root": "apps/finances_api",
+      "pythonVersion": "3.13",
+      "extraPaths": [
+        "libs/llm",
+        "libs/shared_infra",
+        "libs/shared_domain"
+      ]
+    },
+    {
+      "root": "apps/llm_connectors",
+      "pythonVersion": "3.13",
+      "extraPaths": [
+        "libs/llm",
+        "libs/shared_infra",
+        "libs/shared_domain"
+      ]
+    },
+    {
+      "root": "libs/llm",
+      "pythonVersion": "3.13"
+    },
+    {
+      "root": "libs/shared_infra",
+      "pythonVersion": "3.13"
+    },
+    {
+      "root": "libs/shared_domain",
+      "pythonVersion": "3.13"
+    }
+  ],
+  "typeCheckingMode": "strict",
+  "reportMissingImports": true,
+  "reportMissingTypeStubs": false,
+  "reportUnknownMemberType": false,
+  "reportUnknownArgumentType": false,
+  "reportUnknownVariableType": false,
+  "reportUnknownLambdaType": false,
+  "pythonVersion": "3.13",
+  "pythonPlatform": "Darwin",
+  "venvPath": ".",
+  "venv": ".venv"
+}

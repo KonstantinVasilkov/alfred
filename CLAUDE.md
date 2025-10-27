@@ -4,14 +4,25 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Alfred is a Python 3.13+ project in early development stage. Currently contains minimal scaffolding with a single entry point in `main.py`.
+Alfred is a Python 3.13+ monorepo project using UV workspace management. The project consists of multiple apps and shared libraries:
+
+**Apps:**
+- `apps/telegram_bot` - Telegram bot with LLM integration (Anthropic Claude via pydantic-ai)
+- `apps/finances_api` - Finances API (planned)
+- `apps/llm_connectors` - LLM connectors (planned)
+
+**Libs:**
+- `libs/llm` - LLM abstractions (LLMAgent interface) and implementations (AnthropicAgent)
+- `libs/shared_infra` - Infrastructure utilities (config base, logging)
+- `libs/shared_domain` - Shared domain models
 
 ## Configuration
 
-Project settings are managed using Pydantic Settings (`alfred/config.py`) and loaded from environment variables/.env files:
+Each app has its own configuration module using Pydantic Settings, inheriting from `BaseAppSettings` in `libs/shared_infra`:
 - Create a `.env` file in the project root for local development
-- All settings are defined in the `Settings` class
-- Use `get_settings()` to access configuration throughout the application
+- App settings use `env_prefix` for namespacing (e.g., `TELEGRAM__BOT_TOKEN`)
+- Common settings (LOG_LEVEL, SENTRY_DSN) are defined in `BaseAppSettings`
+- Use `get_settings()` in each app to access configuration
 
 ## Development Workflow
 
@@ -60,7 +71,7 @@ Optional body providing context in 1-2 sentences.
 ### Pre-commit Hooks
 Pre-commit hooks run automatically before each commit:
 - **ruff**: Linting and formatting
-- **mypy**: Type checking
+- **pyright**: Type checking
 
 Install hooks: `make pre-commit-install`
 Run manually: `make pre-commit`
@@ -73,9 +84,8 @@ make install          # Install dependencies
 make test             # Run tests
 make lint             # Run ruff linting
 make format           # Format code with ruff
-make typecheck        # Run mypy type checking
+make typecheck        # Run pyright type checking
 make pre-commit       # Run all pre-commit hooks
-make docker-build     # Build Docker image
 make docker-up        # Start services with docker-compose
 make docker-down      # Stop docker-compose services
 make clean            # Clean cache files
@@ -83,14 +93,26 @@ make clean            # Clean cache files
 
 ### Running the application
 
-**Local:**
+**Telegram Bot (Local):**
 ```bash
-python main.py
+make run-app APP=telegram_bot
 ```
 
 **Docker:**
 ```bash
 make docker-up
+```
+
+View logs:
+```bash
+docker compose -f deploy/docker-compose.dev.yml logs -f telegram_bot
+```
+
+**Per-app commands:**
+```bash
+make test-app APP=telegram_bot      # Run tests for specific app
+make lint-app APP=telegram_bot      # Lint specific app
+make typecheck-app APP=telegram_bot # Type check specific app
 ```
 
 ### Dependency management
@@ -113,6 +135,10 @@ uv sync                 # Install all dependencies
 - Use type hints for all function signatures
 - Prefer modern Python union syntax: `dict[str, Any] | None` over `Optional[dict[str, Any]]`
 - Use Pydantic models over raw dictionaries for input validation
+- Run `make typecheck` to check types across all apps and libs
+- Type checking is done with **pyright** in strict mode (configured in `pyrightconfig.json`)
+- The monorepo structure is handled via execution environments in pyright config
+- Add `# pyright: ignore[errorCode]` comments sparingly for legitimate false positives
 
 ### Import Organization
 - **All imports must be at the top of the file** - no exceptions
@@ -140,13 +166,24 @@ This project follows principles from "Architecture Patterns with Python" by Harr
 - **Dependency Inversion**: High-level modules don't depend on low-level modules; both depend on abstractions
 
 ### Project Structure
-The project is currently in its initial setup phase. As it grows, follow this layered architecture:
+The project follows a monorepo structure with UV workspace:
+- **apps/** - Independent application packages (telegram_bot, finances_api, llm_connectors)
+- **libs/** - Shared libraries used across apps (llm, shared_infra, shared_domain)
+
+Within each app/lib, follow this layered architecture:
 - **Domain layer**: Core business logic and entities
 - **Service layer**: Application use cases and orchestration
 - **Adapters layer**: External integrations (repositories, APIs, etc.)
-- **Entrypoints**: Web controllers, CLI commands, etc.
+- **Entrypoints**: Bot handlers, API endpoints, CLI commands
 
-The main entry point is `main.py:main()`.
+Each app has its own entry point in `apps/<app_name>/<app_name>/main.py:main()`.
+
+### Docker Configuration
+- Docker compose is configured for development in `deploy/docker-compose.dev.yml`
+- Dockerfiles are located in each app directory
+- Build context is set to monorepo root to access all workspace members
+- Environment variables use app-specific prefixes (e.g., `TELEGRAM__` for telegram_bot)
+- Apps run as non-root user (alfred:999) for security
 
 
 ## Context7
