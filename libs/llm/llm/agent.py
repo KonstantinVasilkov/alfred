@@ -13,5 +13,5 @@ class LLMAgent(ABC):
 
         Returns:
             Generated response text
+
         """
-        pass

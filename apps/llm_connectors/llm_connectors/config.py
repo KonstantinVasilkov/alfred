@@ -2,7 +2,6 @@
 
 from pydantic import Field
 from pydantic_settings import SettingsConfigDict
-
 from shared_infra.config_base import BaseAppSettings
 
 
@@ -22,4 +21,4 @@ class LLMConnectorsSettings(BaseAppSettings):
 
 def get_settings() -> LLMConnectorsSettings:
     """Get LLM connectors settings instance."""
-    return LLMConnectorsSettings()  # type: ignore[call-arg]
+    return LLMConnectorsSettings()

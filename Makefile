@@ -5,7 +5,12 @@ install:
 	uv sync
 
 test:
-	uv run pytest apps/*/tests libs/*/tests -v
+	@for dir in apps/* libs/*; do \
+		if [ -d "$$dir/tests" ] && [ -n "$$(find $$dir/tests -name 'test_*.py' -type f)" ]; then \
+			echo "Testing $$dir..."; \
+			(cd "$$dir" && uv run pytest tests/ -v) || exit 1; \
+		fi; \
+	done
 
 lint:
 	uv run ruff check .

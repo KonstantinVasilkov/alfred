@@ -5,7 +5,7 @@ from llm.anthropic_agent import AnthropicAgent
 
 
 def create_agent(api_key: str, model: str) -> LLMAgent:
-    """Factory function to create LLM agent based on configuration.
+    """Create LLM agent based on configuration.
 
     Args:
         api_key: API key for the LLM provider
@@ -13,5 +13,6 @@ def create_agent(api_key: str, model: str) -> LLMAgent:
 
     Returns:
         Configured LLM agent instance
+
     """
     return AnthropicAgent(api_key=api_key, model=model)

@@ -2,7 +2,6 @@
 
 from pydantic import Field
 from pydantic_settings import SettingsConfigDict
-
 from shared_infra.config_base import BaseAppSettings
 
 
@@ -19,9 +18,7 @@ class TelegramBotSettings(BaseAppSettings):
 
     BOT_TOKEN: str = Field(description="Telegram bot API token")
     ANTHROPIC_API_KEY: str = Field(description="Anthropic API key for LLM interactions")
-    LLM_MODEL: str = Field(
-        default="claude-3-haiku-20240307", description="LLM model to use for message processing"
-    )
+    LLM_MODEL: str = Field(default="claude-3-haiku-20240307", description="LLM model to use for message processing")
 
 
 def get_settings() -> TelegramBotSettings:
