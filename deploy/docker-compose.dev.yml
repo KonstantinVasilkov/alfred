@@ -1,65 +1,9 @@
 services:
   telegram_bot:
     build:
-      context: ../apps/telegram_bot
-      dockerfile: Dockerfile
+      context: ..
+      dockerfile: apps/telegram_bot/Dockerfile
     container_name: alfred-telegram-bot
     restart: unless-stopped
     env_file:
-      - ../apps/telegram_bot/.env
-    depends_on:
-      - postgres
-      - redis
-
-  finances_api:
-    build:
-      context: ../apps/finances_api
-      dockerfile: Dockerfile
-    container_name: alfred-finances-api
-    restart: unless-stopped
-    ports:
-      - "8000:8000"
-    env_file:
-      - ../apps/finances_api/.env
-    depends_on:
-      - postgres
-      - redis
-
-  llm_connectors:
-    build:
-      context: ../apps/llm_connectors
-      dockerfile: Dockerfile
-    container_name: alfred-llm-connectors
-    restart: unless-stopped
-    ports:
-      - "8001:8001"
-    env_file:
-      - ../apps/llm_connectors/.env
-    depends_on:
-      - redis
-
-  postgres:
-    image: postgres:16-alpine
-    container_name: alfred-postgres
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: alfred
-      POSTGRES_PASSWORD: alfred_dev_password
-      POSTGRES_DB: alfred
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-
-  redis:
-    image: redis:7-alpine
-    container_name: alfred-redis
-    restart: unless-stopped
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
-
-volumes:
-  postgres_data:
-  redis_data:
+      - ../.env

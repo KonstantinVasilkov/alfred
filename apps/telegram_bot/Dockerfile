@@ -11,21 +11,22 @@ WORKDIR /app
 ENV UV_COMPILE_BYTECODE=1
 ENV UV_LINK_MODE=copy
 
-# Install dependencies using uv with cache mount
-RUN --mount=type=cache,target=/root/.cache/uv \
- --mount=type=bind,source=../../uv.lock,target=uv.lock \
- --mount=type=bind,source=../../pyproject.toml,target=pyproject.toml \
- --mount=type=bind,source=pyproject.toml,target=apps/telegram_bot/pyproject.toml \
- --mount=type=bind,source=../../libs,target=libs \
- uv sync --frozen --no-install-project --no-dev
+# Copy workspace configuration and lockfile
+COPY pyproject.toml uv.lock ./
 
-# Copy project and install
-COPY . /app
+# Copy all workspace members (needed for dependency resolution)
+COPY libs ./libs
+COPY apps/telegram_bot ./apps/telegram_bot
+COPY apps/finances_api/pyproject.toml ./apps/finances_api/
+COPY apps/llm_connectors/pyproject.toml ./apps/llm_connectors/
+
+# Install dependencies from workspace root
 RUN --mount=type=cache,target=/root/.cache/uv \
- uv sync --frozen --no-dev
+    uv sync --frozen --no-dev --package telegram-bot
 
 # Configure path and switch to non-root user
 ENV PATH="/app/.venv/bin:$PATH"
+WORKDIR /app/apps/telegram_bot
 USER alfred
 
 # Run the application
