@@ -24,6 +24,9 @@ COPY apps/llm_connectors/pyproject.toml ./apps/llm_connectors/
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --frozen --no-dev --package telegram-bot
 
+# Create logs directory and set permissions
+RUN mkdir -p /app/logs && chown alfred:alfred /app/logs
+
 # Configure path and switch to non-root user
 ENV PATH="/app/.venv/bin:$PATH"
 WORKDIR /app/apps/telegram_bot

@@ -11,6 +11,73 @@ A Telegram bot built with Python 3.13+ and aiogram, following clean architecture
 - Pre-commit hooks for code quality (ruff, pyright)
 - Trunk-based development workflow
 - GitHub Actions CI with path-based filtering
+- **Comprehensive observability** with structlog, OpenTelemetry, and Sentry
+
+## Observability
+
+Alfred includes a production-ready observability stack:
+
+### Stack
+- **Structured logging** with [structlog](https://www.structlog.org/) - Context-rich logs, JSON output in production
+- **OpenTelemetry** - Vendor-neutral telemetry export to Honeycomb, Grafana, Jaeger, etc.
+- **Sentry** - Error tracking with automatic fingerprinting to prevent duplicate issues
+- **Log files** - 7-day rotation with configurable retention
+
+### Quick Start
+
+**Development** (pretty console logs):
+```bash
+# Default configuration in .env
+TELEGRAM__ENVIRONMENT=development
+TELEGRAM__LOG_LEVEL=INFO
+TELEGRAM__OTEL_ENABLED=false
+```
+
+**Production** (JSON logs + OTEL + Sentry):
+```bash
+# Enable full observability
+TELEGRAM__ENVIRONMENT=production
+TELEGRAM__OTEL_ENABLED=true
+TELEGRAM__OTEL_EXPORTER_OTLP_ENDPOINT=https://api.honeycomb.io
+TELEGRAM__HONEYCOMB_API_KEY=your_api_key
+TELEGRAM__SENTRY_DSN=your_sentry_dsn
+```
+
+### Free Tier Options
+
+| Service | Free Tier | What to Track |
+|---------|-----------|---------------|
+| [Honeycomb](https://honeycomb.io) | 20M events/month | Logs, traces, performance |
+| [Sentry](https://sentry.io) | 5K errors/month | Exceptions, error rates |
+| [Grafana Cloud](https://grafana.com/products/cloud/) | 50GB logs | Alternative to Honeycomb |
+
+### Key Features
+
+**Context Binding** - Automatically include fields in all logs:
+```python
+from shared_infra import bind_context, get_logger
+
+logger = get_logger(__name__)
+bind_context(user_id=123, chat_id=456)  # Added to all subsequent logs
+logger.info("message_received")  # Includes user_id and chat_id
+```
+
+**Sentry Fingerprinting** - Group errors to avoid quota exhaustion:
+```python
+logger.exception(
+    "llm_timeout",
+    extra={"sentry_fingerprint": ["llm-timeout"]}  # All LLM timeouts = 1 issue
+)
+```
+
+**Timing** - Automatic performance tracking:
+```python
+start = time.time()
+result = await process()
+logger.info("completed", duration_seconds=time.time() - start)
+```
+
+See [CLAUDE.md](CLAUDE.md#observability) for detailed usage patterns and configuration.
 
 ## Prerequisites
 
