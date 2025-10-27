@@ -13,7 +13,7 @@ Alfred is a Python 3.13+ monorepo project using UV workspace management. The pro
 
 **Libs:**
 - `libs/llm` - LLM abstractions (LLMAgent interface) and implementations (AnthropicAgent)
-- `libs/shared_infra` - Infrastructure utilities (config base, logging)
+- `libs/shared_infra` - Infrastructure utilities (config, observability with structlog/OTEL/Sentry)
 - `libs/shared_domain` - Shared domain models
 
 ## Configuration
@@ -21,8 +21,148 @@ Alfred is a Python 3.13+ monorepo project using UV workspace management. The pro
 Each app has its own configuration module using Pydantic Settings, inheriting from `BaseAppSettings` in `libs/shared_infra`:
 - Create a `.env` file in the project root for local development
 - App settings use `env_prefix` for namespacing (e.g., `TELEGRAM__BOT_TOKEN`)
-- Common settings (LOG_LEVEL, SENTRY_DSN) are defined in `BaseAppSettings`
+- Common settings (LOG_LEVEL, SENTRY_DSN, OTEL_ENABLED) are defined in `BaseAppSettings`
 - Use `get_settings()` in each app to access configuration
+
+## Observability
+
+This project uses a vendor-neutral observability stack with structlog, OpenTelemetry, and Sentry.
+
+### Architecture
+
+**Structured Logging (structlog):**
+- Human-readable colored output in development
+- JSON output in production
+- Context binding for automatic field inclusion in all logs
+- File logging with 7-day rotation
+
+**OpenTelemetry (OTEL):**
+- Vendor-neutral telemetry export
+- Works with Honeycomb, Grafana Cloud, Jaeger, or any OTEL-compatible backend
+- Trace context injection into logs
+- Disabled by default, enable via `OTEL_ENABLED=true`
+
+**Sentry:**
+- Error tracking and performance monitoring
+- Integrated with OTEL
+- Uses fingerprinting to prevent duplicate issues
+
+### Configuration
+
+Set observability configuration in `.env`:
+
+```bash
+# Environment
+TELEGRAM__ENVIRONMENT=development  # development/staging/production
+
+# Logging
+TELEGRAM__LOG_LEVEL=INFO
+TELEGRAM__LOG_FILE_PATH=./logs
+TELEGRAM__LOG_FILE_RETENTION_DAYS=7
+TELEGRAM__LOG_FILE_ROTATION=1 day
+
+# OpenTelemetry
+TELEGRAM__OTEL_ENABLED=false  # Enable for production
+TELEGRAM__OTEL_EXPORTER_OTLP_ENDPOINT=https://api.honeycomb.io
+TELEGRAM__OTEL_SERVICE_NAME=telegram-bot
+TELEGRAM__HONEYCOMB_API_KEY=your_api_key
+
+# Sentry
+TELEGRAM__SENTRY_DSN=your_sentry_dsn
+```
+
+### Usage Patterns
+
+**1. Basic Structured Logging:**
+```python
+from shared_infra import get_logger
+
+logger = get_logger(__name__)
+logger.info("user_action", user_id=123, action="login", ip="1.2.3.4")
+logger.warning("slow_query", query_time_ms=1500, table="users")
+```
+
+**2. Context Binding (Auto-include fields):**
+```python
+from shared_infra import bind_context, clear_context
+
+# Bind context at request start
+bind_context(user_id=123, session_id="abc123")
+
+logger.info("started")    # Includes user_id and session_id
+logger.info("completed")  # Also includes user_id and session_id
+
+# Clear when done
+clear_context()
+```
+
+**3. Sentry Fingerprinting (Prevent Duplicate Issues):**
+```python
+# WITHOUT fingerprinting: 100 users with same error = 100 Sentry issues
+# WITH fingerprinting: 100 users with same error = 1 Sentry issue
+
+logger.exception(
+    "llm_processing_failed",
+    error_type="timeout",
+    model="claude-3-haiku",
+    extra={"sentry_fingerprint": ["llm-timeout"]}
+)
+```
+
+**4. Helper Functions:**
+```python
+from shared_infra import log_integration_error, log_user_error
+
+# Log integration errors
+log_integration_error(
+    logger,
+    "anthropic",
+    "timeout",
+    model="claude-3-haiku",
+    request_id="abc123"
+)
+
+# Log user-facing errors
+log_user_error(
+    logger,
+    "rate_limited",
+    user_id=123,
+    limit=10,
+    window="1min"
+)
+```
+
+### Backend Options (OTEL-Compatible)
+
+| Backend | Free Tier | Setup |
+|---------|-----------|-------|
+| **Honeycomb** | 20M events/month | Set `OTEL_EXPORTER_OTLP_ENDPOINT` + `HONEYCOMB_API_KEY` |
+| **Grafana Cloud** | 50GB logs, 50GB traces | Set `OTEL_EXPORTER_OTLP_ENDPOINT` to Grafana |
+| **Jaeger** | Self-hosted | Run Jaeger locally, point OTLP endpoint |
+| **Elastic APM** | Self-hosted/trial | Self-host or use cloud trial |
+
+Switch backends by changing the `OTEL_EXPORTER_OTLP_ENDPOINT` configuration.
+
+### Log Files
+
+Logs are written to `LOG_FILE_PATH` (default: `./logs`):
+- Files rotate daily
+- Retention: 7 days (configurable via `LOG_FILE_RETENTION_DAYS`)
+- Format: `{SERVICE_NAME}.log`
+- Docker: Volume-mounted to persist logs outside container
+
+### Best Practices
+
+1. **Use structured logging everywhere**: `logger.info("event", field=value)` not `logger.info(f"Event: {value}")`
+2. **Bind context for requests**: User ID, session ID, trace ID
+3. **Always use Sentry fingerprinting**: Prevent quota exhaustion from duplicate issues
+4. **Log timing for important operations**: LLM calls, API calls, database queries
+5. **Use appropriate log levels**:
+   - `DEBUG`: Verbose information for development
+   - `INFO`: Normal operational events
+   - `WARNING`: Unexpected but handled situations
+   - `ERROR`: Error conditions that need attention
+   - `EXCEPTION`: Use for caught exceptions (auto-includes stack trace)
 
 ## Development Workflow
 
