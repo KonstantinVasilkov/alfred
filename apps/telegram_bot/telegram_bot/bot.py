@@ -53,6 +53,7 @@ async def run_bot(token: str, message_service: MessageService) -> None:
     Args:
         token: Telegram bot token
         message_service: Message service instance for LLM processing
+
     """
     global _message_service
     _message_service = message_service

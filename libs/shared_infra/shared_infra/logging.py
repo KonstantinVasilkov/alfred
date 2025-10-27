@@ -9,6 +9,7 @@ def setup_logging(log_level: str = "INFO") -> None:
 
     Args:
         log_level: Logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+
     """
     logging.basicConfig(
         level=getattr(logging, log_level.upper()),

@@ -14,6 +14,7 @@ class AnthropicAgent(LLMAgent):
         Args:
             api_key: Anthropic API key
             model: Model name to use (e.g., 'claude-3-haiku-20240307')
+
         """
         # Set API key in environment for pydantic-ai to pick up
         os.environ["ANTHROPIC_API_KEY"] = api_key
@@ -31,6 +32,7 @@ class AnthropicAgent(LLMAgent):
 
         Returns:
             Generated response text
+
         """
         result = await self._agent.run(user_prompt=text)
         return str(result.data)  # type: ignore[attr-defined]

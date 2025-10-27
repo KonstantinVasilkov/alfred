@@ -2,7 +2,6 @@
 
 from pydantic import Field
 from pydantic_settings import SettingsConfigDict
-
 from shared_infra.config_base import BaseAppSettings
 
 

@@ -1,7 +1,6 @@
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
-
 from llm.anthropic_agent import AnthropicAgent
 
 
@@ -31,13 +30,12 @@ async def test_anthropic_agent_process_message() -> None:
 async def test_anthropic_agent_initialization() -> None:
     """Test Anthropic agent initializes with correct parameters."""
     # Arrange & Act
-    with patch("llm.anthropic_agent.Agent") as mock_agent_class:
-        with patch.dict("os.environ", {}, clear=True):
-            agent = AnthropicAgent(api_key="test_api_key", model="claude-3-haiku-20240307")
+    with patch("llm.anthropic_agent.Agent") as mock_agent_class, patch.dict("os.environ", {}, clear=True):
+        agent = AnthropicAgent(api_key="test_api_key", model="claude-3-haiku-20240307")
 
-            # Assert
-            assert agent._agent is not None
-            mock_agent_class.assert_called_once_with(
-                model="claude-3-haiku-20240307",
-                system_prompt="You are a helpful assistant. Provide concise and accurate responses.",
-            )
+        # Assert
+        assert agent._agent is not None
+        mock_agent_class.assert_called_once_with(
+            model="claude-3-haiku-20240307",
+            system_prompt="You are a helpful assistant. Provide concise and accurate responses.",
+        )
