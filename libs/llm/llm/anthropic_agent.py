@@ -35,4 +35,4 @@ class AnthropicAgent(LLMAgent):
 
         """
         result = await self._agent.run(user_prompt=text)
-        return str(result.data)  # type: ignore[attr-defined]
+        return str(result.output)
