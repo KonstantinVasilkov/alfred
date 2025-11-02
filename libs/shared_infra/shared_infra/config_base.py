@@ -16,6 +16,7 @@ class BaseAppSettings(BaseSettings):
     LOG_FILE_PATH: str = Field(default="/app/logs", description="Directory path for log files")
     LOG_FILE_RETENTION_DAYS: int = Field(default=7, description="Number of days to retain log files")
     LOG_FILE_ROTATION: str = Field(default="1 day", description="Log file rotation interval")
+    ENABLE_LOG_COLORS: bool = Field(default=False, description="Enable colored log output (disable for Docker logs)")
 
     # OpenTelemetry Configuration
     OTEL_ENABLED: bool = Field(default=False, description="Enable OpenTelemetry instrumentation")

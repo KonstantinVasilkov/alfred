@@ -69,8 +69,16 @@ def setup_logging(settings: BaseAppSettings) -> None:
     ]
 
     if settings.ENVIRONMENT == "development":
-        # Pretty console output for development
-        processors.append(structlog.dev.ConsoleRenderer(colors=True))
+        # Clean console output for development
+        # Disable colors by default since Docker logs don't render ANSI codes properly
+        # Users can enable colors by setting ENABLE_LOG_COLORS=true if running in a proper terminal
+        processors.append(
+            structlog.dev.ConsoleRenderer(
+                colors=settings.ENABLE_LOG_COLORS,
+                sort_keys=False,
+                exception_formatter=structlog.dev.plain_traceback,
+            )
+        )
     else:
         # JSON output for production
         processors.append(structlog.processors.JSONRenderer())
